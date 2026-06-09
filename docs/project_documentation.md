@@ -656,6 +656,18 @@ Time-series projections calculated by the LSTM forecasting nodes.
 - **Responsibilities**: Renders demand selector lists, signal projections, and forecasting timelines. Integrates status indicator lights and white border active states.
 - **Inputs**: `posts` and `trends` datasets.
 
+#### 6.2.4 `LocationPulseMap.jsx` (Geographic Pulse Map)
+- **Purpose**: Maps datagram signal locations globally in real-time.
+- **Responsibilities**: Renders coordinate points and interactive connection maps for locations (Canada, USA, UK, France, Germany, Morocco, India, Remote) to filter post directories by regional metrics.
+- **Inputs**: Array of `posts` and `selectedCountry` / `setSelectedCountry` handlers.
+- **Outputs**: Map interactions and filtering requests.
+
+#### 6.2.5 `SentimentOscilloscope.jsx`
+- **Purpose**: Renders real-time sentiment wave signal frequencies.
+- **Responsibilities**: Updates canvas-based waveform dynamics sweep showing sentiment distributions and signal packet volume frequencies.
+- **Inputs**: Array of `posts` metrics.
+- **Outputs**: Canvas animation renders.
+
 ---
 
 ## 7. API Documentation

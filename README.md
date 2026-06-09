@@ -240,6 +240,22 @@ The **Telemetry Grid** offers high-density analytics including 7-Day Tech Demand
 
 ---
 
+### 5. Global Telemetry Map (Geographic Pulse)
+An interactive geographic map mapping tech feeds and signals across localized global regions (e.g., Canada, USA, UK, France, Germany, Morocco, India).
+* Path: [LocationPulseMap.jsx](file:///c:/Users/hp/benmaissa/techbuzz-frontend/src/components/LocationPulseMap.jsx)
+
+![Global Telemetry Map](docs/screenshots/global_telemetry_map.png)
+
+---
+
+### 6. Sentiment Oscilloscope
+Displays real-time sentiment wave dynamics and incoming data packet counts.
+* Path: [SentimentOscilloscope.jsx](file:///c:/Users/hp/benmaissa/techbuzz-frontend/src/components/SentimentOscilloscope.jsx)
+
+![Sentiment Oscilloscope](docs/screenshots/sentiment_oscilloscope.png)
+
+---
+
 ## 🛠️ Monitoring & Interfaces
 * **GraphQL Gateway**: `http://localhost:3001/graphql`
 * **Vite Web Client**: `http://localhost:5173/`

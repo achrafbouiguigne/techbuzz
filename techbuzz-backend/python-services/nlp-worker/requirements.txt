@@ -1,0 +1,6 @@
+redis>=4.5.4
+spacy>=3.5.2
+keybert>=0.7.0
+transformers>=4.30.2
+torch>=2.0.1
+sentence-transformers>=2.2.2

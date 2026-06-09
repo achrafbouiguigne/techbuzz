@@ -376,8 +376,8 @@ flowchart TD
     end
 
     %% Component Links
-    ReactClient -.-->|State Mapping| ThreeCanvas
-    ReactClient -.-->|State Mapping| SectorRadar
+    ReactClient -.->|State Mapping| ThreeCanvas
+    ReactClient -.->|State Mapping| SectorRadar
     ReactClient ===>|GraphQL HTTP/WebSockets| ApolloGQL
     
     ApolloGQL --->|Query/Update| MongoStore

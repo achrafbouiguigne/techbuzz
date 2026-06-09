@@ -640,21 +640,27 @@ Time-series projections calculated by the LSTM forecasting nodes.
 
 ### 6.2 Frontend UI Components
 
-#### 6.2.1 `Universe3D.jsx`
+#### 6.2.1 `Universe3D.jsx` (3D Universe Graph & Post Drawer)
 - **Purpose**: Renders technology categories and posts as an interactive 3D solar system.
 - **Responsibilities**: Maps node relationships (categories as hubs, posts as orbiting packets) using Canvas elements. Triggers camera animations on category select and state updates on node click.
 - **Inputs**: Array of `posts` and `onNodeClick` handler.
 - **Outputs**: Canvas node interactions and camera movement paths.
+
+![3D Universe Graph](file:///c:/Users/hp/benmaissa/docs/screenshots/post_details.png)
 
 #### 6.2.2 `UseCaseExplorer.jsx` (Career Navigator)
 - **Purpose**: Renders regional tech stack roadmaps.
 - **Responsibilities**: Provides selectors for Country/Domain, retrieves recommendations via GraphQL queries (`aiRecommendation`), and renders learning roadmaps (Fundamentals -> Core -> Advanced -> Market).
 - **Inputs**: State parameters `selectedCountry`, `selectedDomain`.
 
+![Career Navigator](file:///c:/Users/hp/benmaissa/docs/screenshots/career_navigator.png)
+
 #### 6.2.3 `GlobalTelemetryMap.jsx` (Telemetry Grid)
 - **Purpose**: Renders projection and analysis grids.
 - **Responsibilities**: Renders demand selector lists, signal projections, and forecasting timelines. Integrates status indicator lights and white border active states.
 - **Inputs**: `posts` and `trends` datasets.
+
+![Telemetry Grid](file:///c:/Users/hp/benmaissa/docs/screenshots/telemetry_grid.png)
 
 #### 6.2.4 `LocationPulseMap.jsx` (Geographic Pulse Map)
 - **Purpose**: Maps datagram signal locations globally in real-time.
@@ -662,11 +668,15 @@ Time-series projections calculated by the LSTM forecasting nodes.
 - **Inputs**: Array of `posts` and `selectedCountry` / `setSelectedCountry` handlers.
 - **Outputs**: Map interactions and filtering requests.
 
-#### 6.2.5 `SentimentOscilloscope.jsx`
+![Geographic Location Pulse Map](file:///c:/Users/hp/benmaissa/docs/screenshots/global_telemetry_map.png)
+
+#### 6.2.5 `SentimentOscilloscope.jsx` (Oscilloscope Waves)
 - **Purpose**: Renders real-time sentiment wave signal frequencies.
 - **Responsibilities**: Updates canvas-based waveform dynamics sweep showing sentiment distributions and signal packet volume frequencies.
 - **Inputs**: Array of `posts` metrics.
 - **Outputs**: Canvas animation renders.
+
+![Sentiment Oscilloscope](file:///c:/Users/hp/benmaissa/docs/screenshots/sentiment_oscilloscope.png)
 
 ---
 

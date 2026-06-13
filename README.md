@@ -7,7 +7,7 @@ InptPulse / TechBuzz v2 is a real-time technology trend telemetry system and car
 
 ---
 
-## 🏗️ System Architecture
+## System Architecture
 
 The project is designed as a decoupled, multi-tier microservice architecture. 
 
@@ -82,7 +82,7 @@ flowchart TB
 
 ---
 
-## 📁 Project Folder Structure
+## Project Folder Structure
 
 The workspace is organized into two primary project directories:
 
@@ -130,7 +130,7 @@ benmaissa/
 
 ---
 
-## 🚀 How to Run the Project (Step-by-Step)
+## How to Run the Project (Step-by-Step)
 
 ### Prerequisites
 Make sure you have [Node.js v18+](https://nodejs.org/), [Docker Desktop](https://www.docker.com/products/docker-desktop/), and [Git](https://git-scm.com/) installed on your machine.
@@ -205,7 +205,7 @@ Start the Vite developer client.
 
 ---
 
-## 📊 Frontend Components Walkthrough
+## Frontend Components Walkthrough
 
 ### 1. Market Terminal Dashboard
 The **Market Terminal** serves as the central control room. It shows the total volume of tech datagrams processed, active node networks, a list of **Top Market Movers** matching current categories, and feeds filter filters.
@@ -256,7 +256,7 @@ Displays real-time sentiment wave dynamics and incoming data packet counts.
 
 ---
 
-## 🛠️ Monitoring & Interfaces
+## Monitoring & Interfaces
 * **GraphQL Gateway**: `http://localhost:3001/graphql`
 * **Vite Web Client**: `http://localhost:5173/`
 * **Mongo-Express (MongoDB UI)**: `http://localhost:8081/` (Login: `admin` / `password123`)

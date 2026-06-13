@@ -41,13 +41,9 @@ function App() {
   const [selectedCountry, setSelectedCountry] = useState('All');
   const [selectedDomain, setSelectedDomain] = useState('All');
 
-  useEffect(() => {
-    console.log('[App] selectedPost updated to:', selectedPost);
-  }, [selectedPost]);
-
   // Fetch data
   const { data, loading, error } = useQuery(GET_DASHBOARD_DATA, {
-    variables: { 
+    variables: {
       limit: 500
     },
     pollInterval: 10000 // Refresh every 10s
@@ -56,11 +52,11 @@ function App() {
   const rawPosts = data?.enrichedPosts || [];
   const trends = data?.currentTrends || [];
   const totalPostCount = data?.totalPostCount || 0;
-  
+
   // Dynamic posts filtering based on Country, Domain, and Category (Top Movers) selections
   const posts = useMemo(() => {
     let filtered = rawPosts;
-    
+
     if (selectedCountry !== 'All') {
       filtered = filtered.filter(p => {
         const hasLocation = p.locations && p.locations.some(l => {
@@ -74,9 +70,9 @@ function App() {
           return locLower.includes(countryLower);
         });
         const titleAndContent = `${p.title} ${p.content || ''}`.toLowerCase();
-        const textMatches = titleAndContent.includes(selectedCountry.toLowerCase()) || 
-                            (selectedCountry.toLowerCase() === 'morocco' && titleAndContent.includes('maroc')) ||
-                            (selectedCountry.toLowerCase() === 'france' && titleAndContent.includes('french'));
+        const textMatches = titleAndContent.includes(selectedCountry.toLowerCase()) ||
+          (selectedCountry.toLowerCase() === 'morocco' && titleAndContent.includes('maroc')) ||
+          (selectedCountry.toLowerCase() === 'france' && titleAndContent.includes('french'));
         return hasLocation || textMatches;
       });
     }
@@ -148,19 +144,19 @@ function App() {
 
       {/* Navigation Header */}
       <div className="nav-header">
-        <button 
+        <button
           onClick={() => setCurrentPage('market')}
           className={`nav-button ${currentPage === 'market' ? 'active' : ''}`}
         >
           MARKET TERMINAL
         </button>
-        <button 
+        <button
           onClick={() => setCurrentPage('career')}
           className={`nav-button ${currentPage === 'career' ? 'active' : ''}`}
         >
           CAREER NAVIGATOR
         </button>
-        <button 
+        <button
           onClick={() => setCurrentPage('telemetry')}
           className={`nav-button ${currentPage === 'telemetry' ? 'active' : ''}`}
         >
@@ -170,7 +166,7 @@ function App() {
 
       {currentPage === 'market' && (
         <>
-          <TechDAQTerminal 
+          <TechDAQTerminal
             trends={trends}
             totalPosts={totalPostCount}
             selectedCategory={selectedCategory}
@@ -202,7 +198,7 @@ function App() {
             <div className="glass-panel post-detail techdaq-panel">
               <button className="close-btn" onClick={() => setSelectedPost(null)}>×</button>
               <h3 className="post-title">{selectedPost.title}</h3>
-              
+
               <div className="badge-container">
                 <span className="badge category">{selectedPost.primary_category}</span>
               </div>
@@ -212,8 +208,8 @@ function App() {
               </p>
 
               <div className="sentiment-bar-container">
-                <div 
-                  className="sentiment-fill" 
+                <div
+                  className="sentiment-fill"
                   style={{
                     width: `${Math.max(10, selectedPost.confidence * 100)}%`,
                     background: selectedPost.confidence > 0.5 ? 'var(--accent-green)' : 'var(--accent-red)'
@@ -246,11 +242,11 @@ function App() {
           position: 'relative',
           zIndex: 10
         }}>
-          <UseCaseExplorer 
-            selectedCountry={selectedCountry} 
-            setSelectedCountry={setSelectedCountry} 
-            selectedDomain={selectedDomain} 
-            setSelectedDomain={setSelectedDomain} 
+          <UseCaseExplorer
+            selectedCountry={selectedCountry}
+            setSelectedCountry={setSelectedCountry}
+            selectedDomain={selectedDomain}
+            setSelectedDomain={setSelectedDomain}
           />
         </div>
       )}

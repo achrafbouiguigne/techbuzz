@@ -12,13 +12,19 @@ const { isTechnicallyRelevant } = require('./redditCollector');
 async function fetchDevToArticles(tag, limit = 15, page = 1) {
   try {
     const url = `https://dev.to/api/articles?tag=${tag}&per_page=${limit}&page=${page}`;
-    const res = await axios.get(url, { 
+    const res = await axios.get(url, {
       headers: { 'User-Agent': 'TechBuzzTracker/1.0 (educational project)' },
-      timeout: 10000 
+      timeout: 10000
     });
-    
+
     if (!Array.isArray(res.data)) {
-      logger.warn(`[Scraper] Dev.to API returned invalid payload for tag=${tag}`);
+      logger.warn(`[Scraper] Dev.to API retu
+        
+        
+        
+        
+        
+        rned invalid payload for tag=${tag}`);
       return [];
     }
 
@@ -26,7 +32,7 @@ async function fetchDevToArticles(tag, limit = 15, page = 1) {
       // Map tags to keywords for categoryService mapping
       const tags = article.tag_list || [];
       const category = getCategory([...tags, tag]);
-      
+
       return {
         redditId: `devto_${article.id}`,
         title: article.title,
@@ -57,7 +63,7 @@ async function fetchHackerNewsStories(limit = 30) {
   try {
     const url = `https://hn.algolia.com/api/v1/search_by_date?tags=story&hitsPerPage=${limit}`;
     const res = await axios.get(url, { timeout: 10000 });
-    
+
     if (!res.data || !Array.isArray(res.data.hits)) {
       logger.warn(`[Scraper] HN Algolia Search returned invalid payload`);
       return [];
@@ -68,7 +74,7 @@ async function fetchHackerNewsStories(limit = 30) {
       const titleLower = (hit.title || '').toLowerCase();
       const keywords = titleLower.split(/\b/);
       const category = getCategory(keywords);
-      
+
       // Determine a pseudo-subreddit name based on guessed category
       const subreddit = category === 'Other' ? 'programming' : category.toLowerCase();
 
@@ -132,7 +138,7 @@ async function saveRawPost(post) {
 // ─────────────────────────────────────────────
 async function fetchWebScraperPosts() {
   logger.info(`[Scraper] Starting Web Scraper collect (Dev.to & Hacker News)...`);
-  
+
   const tags = [
     'programming', 'webdev', 'devops', 'machinelearning', 'databases',
     'javascript', 'python', 'react', 'node', 'typescript',

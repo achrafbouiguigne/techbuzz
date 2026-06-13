@@ -17,6 +17,13 @@
   --accent-green: #3fb950;     /* Mint Emerald Green */
   --accent-red: #f85149;       /* Crimson Red */
   --accent-blue: #2f81f7;      /* Clean Royal Blue */
+
+  /* Cyberpunk Neon Colors used by dashboard widgets */
+  --neon-green: #00ff41;       /* Cyberpunk Matrix/Neon Green */
+  --neon-red: #ff003c;         /* Cyberpunk Neon Red */
+  --neon-blue: #00f0ff;        /* Cyberpunk Neon Blue */
+  --border-neon: 1px solid rgba(0, 255, 65, 0.25);
+  --text-main: var(--text-primary);
   
   /* System Spacing Scale */
   --space-xs: 4px;

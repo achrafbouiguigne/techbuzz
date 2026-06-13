@@ -24,7 +24,7 @@ export default function Universe3D({ posts, onNodeClick }) {
 
     // 1. Create a "Sector Hub" node for each active category
     const activeCategories = new Set(posts.map(p => p.primary_category));
-    
+
     activeCategories.forEach(cat => {
       nodes.push({
         id: `cat_${cat}`,
@@ -39,7 +39,7 @@ export default function Universe3D({ posts, onNodeClick }) {
     posts.forEach(post => {
       // Determine color based on sentiment (confidence > 0.5 is green, else red)
       const isPositive = post.confidence > 0.5;
-      
+
       nodes.push({
         id: post.external_id,
         name: post.title,
@@ -64,11 +64,11 @@ export default function Universe3D({ posts, onNodeClick }) {
     if (node.group === 'category') {
       console.log('[Universe3D] Category node clicked, positioning camera...');
       const distance = 120;
-      const distRatio = 1 + distance/Math.hypot(node.x, node.y, node.z);
+      const distRatio = 1 + distance / Math.hypot(node.x, node.y, node.z);
       if (fgRef.current) {
         fgRef.current.cameraPosition(
           { x: node.x * distRatio, y: node.y * distRatio, z: node.z * distRatio },
-          node, 
+          node,
           1500
         );
       }
@@ -95,8 +95,8 @@ export default function Universe3D({ posts, onNodeClick }) {
       d3Force="charge"
       d3AlphaDecay={0.02}
       d3VelocityDecay={0.2}
-      // Added bloom effect simulated via node rendering if needed, 
-      // but native colors will look great on #000000.
+    // Added bloom effect simulated via node rendering if needed, 
+    // but native colors will look great on #000000.
     />
   );
 }

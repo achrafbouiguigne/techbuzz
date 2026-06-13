@@ -5,8 +5,8 @@ const logger = require('../utils/logger');
 const REDIS_HOST = 'localhost';
 const REDIS_PORT = 6379;
 
-// Deux clients séparés : un pour lpush, un pour blpop
-// (blpop bloque la connexion, impossible de partager)
+
+
 const redisPub = new Redis({ host: REDIS_HOST, port: REDIS_PORT,
   retryStrategy: (times) => Math.min(times * 50, 2000),
 });
@@ -45,7 +45,7 @@ async function processWithPythonNLP(post) {
 
     pendingJobs.set(jobId, { resolve, reject, timeoutId });
 
-    // Vérifier que Redis est prêt avant d'envoyer
+    
     if (redisPub.status !== 'ready') {
       pendingJobs.delete(jobId);
       clearTimeout(timeoutId);
@@ -69,7 +69,7 @@ function listenForNLPResults() {
   async function waitForResults() {
     while (true) {
       try {
-        // blpop lit à GAUCHE — cohérent avec lpush du worker Python
+        
         const result = await redisSub.blpop('nlp_results_queue', 30);
         if (!result) continue;
 

@@ -6,29 +6,29 @@ const connection = {
   port: process.env.REDIS_PORT || 6379,
 };
 
-// Factory pour créer des queues
+
 function createQueue(name, opts = {}) {
   return new Queue(name, {
     connection,
     defaultJobOptions: {
       attempts: 3,
       backoff: { type: 'exponential', delay: 2000 },
-      removeOnComplete: { count: 100 },  // garde les 100 derniers jobs
-      removeOnFail:     { count: 50 },   // garde les 50 derniers échecs
+      removeOnComplete: { count: 100 },  
+      removeOnFail:     { count: 50 },   
     },
     ...opts,
   });
 }
 
-// Factory pour créer des workers
+
 function createWorker(name, processor, opts = {}) {
   const worker = new Worker(name, processor, {
     connection,
-    concurrency: 5,  // 5 jobs en parallèle
+    concurrency: 5,  
     ...opts,
   });
 
-  // Logs standards pour tous les workers
+  
   worker.on('completed', job => {
     logger.info(`[${name}] ✓ Job ${job.id} complété`);
   });

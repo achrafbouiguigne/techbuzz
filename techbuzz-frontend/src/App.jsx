@@ -35,25 +35,25 @@ const GET_DASHBOARD_DATA = gql`
 `;
 
 function App() {
-  const [currentPage, setCurrentPage] = useState('market'); // 'market' or 'career'
+  const [currentPage, setCurrentPage] = useState('market'); 
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedPost, setSelectedPost] = useState(null);
   const [selectedCountry, setSelectedCountry] = useState('All');
   const [selectedDomain, setSelectedDomain] = useState('All');
 
-  // Fetch data
+  
   const { data, loading, error } = useQuery(GET_DASHBOARD_DATA, {
     variables: {
       limit: 500
     },
-    pollInterval: 10000 // Refresh every 10s
+    pollInterval: 10000 
   });
 
   const rawPosts = data?.enrichedPosts || [];
   const trends = data?.currentTrends || [];
   const totalPostCount = data?.totalPostCount || 0;
 
-  // Dynamic posts filtering based on Country, Domain, and Category (Top Movers) selections
+  
   const posts = useMemo(() => {
     let filtered = rawPosts;
 
@@ -142,7 +142,7 @@ function App() {
         </div>
       )}
 
-      {/* Navigation Header */}
+      {}
       <div className="nav-header">
         <button
           onClick={() => setCurrentPage('market')}

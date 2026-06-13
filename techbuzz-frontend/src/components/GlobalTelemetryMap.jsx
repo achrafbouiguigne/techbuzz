@@ -19,9 +19,9 @@ const GET_LSTM_PREDICTIONS = gql`
 `;
 
 export default function GlobalTelemetryMap({ posts = [], trends = [] }) {
-  // ────────────────────────────────────────────────────────
-  // 1. DEDUPLICATE POSTS
-  // ────────────────────────────────────────────────────────
+  
+  
+  
   const uniquePosts = useMemo(() => {
     const seen = new Set();
     return posts.filter(p => {
@@ -32,36 +32,36 @@ export default function GlobalTelemetryMap({ posts = [], trends = [] }) {
     });
   }, [posts]);
 
-  // ────────────────────────────────────────────────────────
-  // 2. STATE & QUERY INITIALIZATION
-  // ────────────────────────────────────────────────────────
+  
+  
+  
   const [selectedForecastKeyword, setSelectedForecastKeyword] = useState('');
   const [hoveredForecastPoint, setHoveredForecastPoint] = useState(null);
 
-  // Load PyTorch LSTM Predictions from Backend
+  
   const { data: lstmData, loading: lstmLoading, error: lstmError } = useQuery(GET_LSTM_PREDICTIONS, {
-    pollInterval: 300000 // Refresh forecasts every 5m
+    pollInterval: 300000 
   });
 
   const predictions = lstmData?.predictTrends || [];
 
-  // Default selected forecast keyword when predictions load
+  
   useEffect(() => {
     if (predictions && predictions.length > 0 && !selectedForecastKeyword) {
       setSelectedForecastKeyword(predictions[0].keyword);
     }
   }, [predictions, selectedForecastKeyword]);
 
-  // Utility to determine post collector source
+  
   const getPostSource = (post) => {
     if (post.external_id?.startsWith('devto_')) return 'Dev.to';
     if (post.external_id?.startsWith('hn_')) return 'Hacker News';
     return 'Reddit';
   };
 
-  // ────────────────────────────────────────────────────────
-  // 3. DYNAMIC METRIC CALCULATIONS
-  // ────────────────────────────────────────────────────────
+  
+  
+  
   const globalKPIs = useMemo(() => {
     const total = uniquePosts.length;
     let devto = 0;
@@ -88,9 +88,9 @@ export default function GlobalTelemetryMap({ posts = [], trends = [] }) {
     };
   }, [uniquePosts]);
 
-  // ────────────────────────────────────────────────────────
-  // 4. LSTM TIME SERIES VISUALIZATION COORDINATES
-  // ────────────────────────────────────────────────────────
+  
+  
+  
   const activeForecast = useMemo(() => {
     if (!predictions || predictions.length === 0) return null;
     return predictions.find(p => p.keyword === selectedForecastKeyword) || predictions[0];
@@ -104,7 +104,7 @@ export default function GlobalTelemetryMap({ posts = [], trends = [] }) {
     const allPoints = [...hist, ...fore];
     const maxVal = Math.max(...allPoints.map(p => p.count), 5);
 
-    // Map to SVG coordinates: SVG dimension 640x180
+    
     const w = 640;
     const h = 180;
     const padX = 20;
@@ -130,7 +130,7 @@ export default function GlobalTelemetryMap({ posts = [], trends = [] }) {
     };
   }, [activeForecast]);
 
-  // Create SVG path strings for the forecast line chart
+  
   const linePaths = useMemo(() => {
     if (forecastPoints.all.length === 0) return { historical: '', forecast: '' };
 
@@ -151,7 +151,7 @@ export default function GlobalTelemetryMap({ posts = [], trends = [] }) {
     };
   }, [forecastPoints]);
 
-  // Dynamic clean market insights (No AI slop copy)
+  
   const getForecastInsight = () => {
     if (!activeForecast) return '';
     const histValues = activeForecast.historical.map(p => p.count);
@@ -194,9 +194,9 @@ export default function GlobalTelemetryMap({ posts = [], trends = [] }) {
       overflowY: 'auto'
     }}>
       
-      {/* ──────────────────────────────────────────────────────── */}
-      {/* HEADER SECTION                                           */}
-      {/* ──────────────────────────────────────────────────────── */}
+      {}
+      {}
+      {}
       <div style={{
         display: 'flex',
         justifyContent: 'space-between',
@@ -216,7 +216,7 @@ export default function GlobalTelemetryMap({ posts = [], trends = [] }) {
           </span>
         </div>
 
-        {/* Global Pipeline Node Status Icons */}
+        {}
         <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
           {globalKPIs.activeSources.map(src => (
             <div key={src.name} style={{
@@ -237,9 +237,9 @@ export default function GlobalTelemetryMap({ posts = [], trends = [] }) {
         </div>
       </div>
 
-      {/* ──────────────────────────────────────────────────────── */}
-      {/* LSTM TREND FORECASTING HUB                               */}
-      {/* ──────────────────────────────────────────────────────── */}
+      {}
+      {}
+      {}
       <div style={{
         background: 'var(--bg-panel)',
         border: '1px solid rgba(255, 255, 255, 0.06)',
@@ -271,7 +271,7 @@ export default function GlobalTelemetryMap({ posts = [], trends = [] }) {
             gap: '24px',
             flexWrap: 'wrap'
           }}>
-            {/* Left Column: Feed Sidebar Selector */}
+            {}
             <div style={{
               display: 'flex',
               flexDirection: 'column',
@@ -329,7 +329,7 @@ export default function GlobalTelemetryMap({ posts = [], trends = [] }) {
               ))}
             </div>
 
-            {/* Middle Column: SVG Timeline Chart */}
+            {}
             <div style={{
               flex: '2.2',
               minWidth: '400px',
@@ -340,12 +340,12 @@ export default function GlobalTelemetryMap({ posts = [], trends = [] }) {
               position: 'relative'
             }}>
               <svg width="100%" height="200" viewBox="0 0 640 200" style={{ overflow: 'visible' }}>
-                {/* Grid guidelines */}
+                {}
                 <line x1="20" y1="20" x2="620" y2="20" stroke="rgba(255,255,255,0.02)" strokeWidth="1" />
                 <line x1="20" y1="90" x2="620" y2="90" stroke="rgba(255,255,255,0.02)" strokeWidth="1" />
                 <line x1="20" y1="160" x2="620" y2="160" stroke="rgba(255,255,255,0.02)" strokeWidth="1" />
 
-                {/* Present Day Threshold Line */}
+                {}
                 {forecastPoints.historical.length > 0 && (
                   <g>
                     <line 
@@ -380,11 +380,11 @@ export default function GlobalTelemetryMap({ posts = [], trends = [] }) {
                   </g>
                 )}
 
-                {/* Chart Paths */}
+                {}
                 <path d={linePaths.historical} fill="none" stroke="#64748b" strokeWidth="1.8" />
                 <path d={linePaths.forecast} fill="none" stroke="#10b981" strokeWidth="2" strokeDasharray="3,3" />
 
-                {/* Draw Hoverable Points */}
+                {}
                 {forecastPoints.all.map(pt => {
                   const isForecast = pt.idx >= activeForecast.historical.length;
                   const isHovered = hoveredForecastPoint && hoveredForecastPoint.idx === pt.idx;
@@ -406,7 +406,7 @@ export default function GlobalTelemetryMap({ posts = [], trends = [] }) {
                   );
                 })}
 
-                {/* Chart Tooltip Group inside SVG */}
+                {}
                 {hoveredForecastPoint && (
                   <g transform={`translate(${hoveredForecastPoint.x}, ${hoveredForecastPoint.y})`} style={{ pointerEvents: 'none' }}>
                     <rect
@@ -442,7 +442,7 @@ export default function GlobalTelemetryMap({ posts = [], trends = [] }) {
               </svg>
             </div>
 
-            {/* Forecaster Insights Sidebar */}
+            {}
             <div style={{
               flex: '1',
               minWidth: '240px',

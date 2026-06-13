@@ -23,17 +23,17 @@ const logger = require('./utils/logger');
 
 
 async function start() {
-  // MongoDB
+  
   await connectDB();
   metrics.mongoConnected.set(1);
-  // Redis
+  
   await connectRedis();
   
 
-  // Schema GraphQL
+  
   const schema = makeExecutableSchema({ typeDefs, resolvers });
 
-  // WebSocket pour Subscriptions
+  
   const wsServer = new WebSocketServer({ server, path: '/graphql' });
   useServer({ schema }, wsServer);
   logger.info('[GraphQL] WebSocket Subscriptions actif');
@@ -47,14 +47,14 @@ async function start() {
     res.status(500).end(err.message);
   }
 });
-  // Apollo Server
+  
   const apolloServer = new ApolloServer({ schema });
   await apolloServer.start();
 
   app.use('/graphql', cors(), express.json(), expressMiddleware(apolloServer));
   logger.info('[GraphQL] Apollo Server actif sur /graphql');
 
-  // Health check
+  
   app.get('/health', (req, res) => res.json({ status: 'ok' }));
 
   app.get('/', (req, res) => {
@@ -65,15 +65,15 @@ async function start() {
         });
     });
 
-  // Scheduler
+  
   startScheduler();
-  // Workers v2
+  
   require('./workers/classifierWorker');
   require('./workers/persistWorker');
   require('./workers/trendWorker');
   require('./workers/cacheWorker');
   
-  // Trend Aggregator
+  
   const { startTrendAggregator } = require('./services/trendAggregator');
   startTrendAggregator();
 

@@ -19,9 +19,9 @@ const TrendSnapshotSchema = new mongoose.Schema({
   collection: 'trend_snapshots'
 });
 
-// Index pour retrouver l’évolution d’un mot-clé
+
 TrendSnapshotSchema.index({ keyword: 1, snapshotAt: -1 });
-// Index pour analyser par catégorie
+
 TrendSnapshotSchema.index({ category: 1, snapshotAt: -1 });
 
 module.exports = mongoose.model('TrendSnapshot', TrendSnapshotSchema);

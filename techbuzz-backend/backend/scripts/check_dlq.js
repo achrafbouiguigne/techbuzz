@@ -25,7 +25,7 @@ async function check() {
     }
   }
 
-  // Also query the pending messages in events:PostFilteredAsIT for nlp-group
+  
   try {
     const pending = await redis.xPending('events:PostFilteredAsIT', 'nlp-group');
     console.log(`Pending count in events:PostFilteredAsIT: ${pending.pending}`);

@@ -6,9 +6,9 @@ const logger = require('../utils/logger');
 const { publishEvent } = require('../events/publisher');
 const STREAMS = require('../events/streams');
 
-// ─────────────────────────────────────────────
-// LISTE DES SUBREDDITS TECH (sources de collecte)
-// ─────────────────────────────────────────────
+
+
+
 const TECH_SUBREDDITS = [
   'programming', 'webdev', 'MachineLearning', 'javascript', 'Python',
   'artificial', 'devops', 'opensource', 'reactjs', 'node', 'typescript',
@@ -21,17 +21,17 @@ const TECH_SUBREDDITS = [
   'SpringBoot', 'web3', 'microservices', 'serverless',
 ];
 
-// ─────────────────────────────────────────────
-// HEADERS HTTP pour l'API Reddit
-// ─────────────────────────────────────────────
+
+
+
 const HEADERS = {
   'User-Agent': 'TechBuzzTracker/1.0 (educational project)',
   'Accept': 'application/json',
 };
 
-// ─────────────────────────────────────────────
-// FILTRE IT "SOFT" (élimine le bruit avant traitement)
-// ─────────────────────────────────────────────
+
+
+
 const IT_SIGNAL_KEYWORDS = new Set([
   'code', 'function', 'api', 'library', 'framework', 'package', 'module',
   'error', 'bug', 'debug', 'deploy', 'build', 'compile', 'runtime',
@@ -53,44 +53,40 @@ const NON_TECH_SIGNALS = [
   /career advice|should i learn|which language/i
 ];
 
-/**
- * Filtre "soft" pour garder uniquement les posts techniquement pertinents
- * @param {Object} post - Post Reddit brut
- * @returns {Object} { relevant: boolean, reason: string, score?: number }
- */
+
 function isTechnicallyRelevant(post) {
   const text = `${post.title} ${post.content || ''}`.toLowerCase();
   
-  // 1. Rejet rapide des signaux "non-tech" (lifestyle, memes, career...)
+  
   if (NON_TECH_SIGNALS.some(pattern => pattern.test(text))) {
     return { relevant: false, reason: 'non_tech_signal' };
   }
   
-  // 2. Compter les mots-clés techniques dans le contenu
+  
   const words = text.match(/\b\w+\b/g) || [];
   const techMatches = words.filter(w => IT_SIGNAL_KEYWORDS.has(w)).length;
   
-  // 3. Vérifier si le titre contient déjà un signal tech fort
+  
   const titleWords = (post.title || '').toLowerCase().match(/\b\w+\b/g) || [];
   const titleHasTech = titleWords.slice(0, 15).some(w => IT_SIGNAL_KEYWORDS.has(w));
   
-  // 4. Décision : au moins 2 signaux tech OU 1 signal + titre technique
+  
   if (techMatches >= 2 || (techMatches >= 1 && titleHasTech)) {
     return { relevant: true, reason: 'tech_keywords', score: techMatches };
   }
   
-  // 5. Contenu trop court pour être analysé (< 50 caractères)
+  
   if (text.replace(/\s+/g, '').length < 50) {
     return { relevant: false, reason: 'too_short' };
   }
   
-  // 6. Par défaut : pas assez de signaux techniques détectés
+  
   return { relevant: false, reason: 'low_tech_signal' };
 }
 
-// ─────────────────────────────────────────────
-// FETCH DES POSTS D'UN SUBREDDIT
-// ─────────────────────────────────────────────
+
+
+
 async function fetchSubredditPosts(subreddit, limit = 100) {
   const url = `https://www.reddit.com/r/${subreddit}/hot.json?limit=${limit}`;
   
@@ -119,9 +115,9 @@ async function fetchSubredditPosts(subreddit, limit = 100) {
   });
 }
 
-// ─────────────────────────────────────────────
-// SAUVEGARDE DANS MONGODB (pour audit/debug)
-// ─────────────────────────────────────────────
+
+
+
 async function saveRawPost(redditPost) {
   try {
     const post = new RawPost({
@@ -144,7 +140,7 @@ async function saveRawPost(redditPost) {
     logger.debug(`[DB] Post ${redditPost.redditId} inséré dans posts_raw`);
   } catch (err) {
     if (err.code === 11000) {
-      // Duplicate key - normal en cas de re-collecte
+      
       logger.debug(`[DB] Post ${redditPost.redditId} déjà existant (skip)`);
     } else {
       logger.error(`[DB] Erreur insertion post ${redditPost.redditId}:`, err.message);
@@ -152,9 +148,9 @@ async function saveRawPost(redditPost) {
   }
 }
 
-// ─────────────────────────────────────────────
-// COLLECTE PRINCIPALE (avec filtrage intégré)
-// ─────────────────────────────────────────────
+
+
+
 async function fetchAllSubreddits() {
   let allPosts = [];
   let filteredCount = 0;
@@ -169,12 +165,12 @@ async function fetchAllSubreddits() {
       const posts = await fetchSubredditPosts(sub);
       logger.debug(`[Collector] r/${sub} → ${posts.length} posts bruts collectés`);
 
-      // 👉 FILTRAGE "SOFT" : garder uniquement les posts techniquement pertinents
+      
       const relevantPosts = posts.filter(post => {
         const check = isTechnicallyRelevant(post);
         if (!check.relevant) {
           filteredCount++;
-          // Log en debug pour ne pas spammer la console
+          
           logger.debug(`[Filter] Rejeté [${check.reason}]: "${post.title.slice(0, 60)}..."`);
           return false;
         }
@@ -183,7 +179,7 @@ async function fetchAllSubreddits() {
       
       logger.info(`[Collector] r/${sub} → ${posts.length} bruts, ${relevantPosts.length} pertinents (${Math.round(relevantPosts.length/posts.length*100)}%)`);
 
-      // 👉 Envoie chaque post pertinent dans le Stream Redis (V2 Pipeline)
+      
       if (relevantPosts.length > 0) {
         let sentCount = 0;
         for (const post of relevantPosts) {
@@ -217,16 +213,16 @@ async function fetchAllSubreddits() {
         logger.info(`[Stream] r/${sub} → ${sentCount} posts envoyés dans le Stream Redis`);
       }
 
-      // 👉 Enregistre TOUS les posts (bruts) dans MongoDB pour audit/debug
-      // (utile pour analyser les faux négatifs du filtre plus tard)
+      
+      
       for (const p of posts) {
         await saveRawPost(p);
       }
 
-      // Ajoute les posts pertinents au résultat global
+      
       allPosts.push(...relevantPosts);
       
-      // Pause anti-rate-limit Reddit (2s entre chaque subreddit)
+      
       await new Promise(resolve => setTimeout(resolve, 2000));
 
     } catch (err) {
@@ -237,12 +233,12 @@ async function fetchAllSubreddits() {
         status: err.response?.status
       });
       
-      // Continue avec le subreddit suivant (ne pas bloquer toute la collecte)
+      
       continue;
     }
   }
 
-  // 📊 Résumé final
+  
   const totalCollected = allPosts.length + filteredCount;
   logger.info(`[Collector] ✅ Terminé: ${allPosts.length} posts pertinents / ${filteredCount} filtrés / ${errorCount} erreurs`);
   
@@ -253,12 +249,12 @@ async function fetchAllSubreddits() {
   return allPosts;
 }
 
-// ─────────────────────────────────────────────
-// EXPORTS
-// ─────────────────────────────────────────────
+
+
+
 module.exports = { 
   fetchAllSubreddits, 
   fetchSubredditPosts,
-  isTechnicallyRelevant, // Exporté pour tests unitaires
+  isTechnicallyRelevant, 
   TECH_SUBREDDITS 
 };

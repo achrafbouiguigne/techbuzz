@@ -1,8 +1,8 @@
-// ============================================================================
-// InptPulse v2 — Streams Registry
-// ============================================================================
-// Catalogue centralisé des 8 événements de l'Architecture Event-Driven
-// ============================================================================
+
+
+
+
+
 
 const STREAMS = {
   POST_COLLECTED: 'events:PostCollected',

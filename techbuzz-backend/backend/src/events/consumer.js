@@ -1,6 +1,6 @@
-// ============================================================================
-// InptPulse v2 — Event Consumer & Idempotency
-// ============================================================================
+
+
+
 
 const { getRedisClient } = require('../config/redis');
 const logger = require('../utils/logger');
@@ -16,15 +16,7 @@ async function ensureConsumerGroup(redis, streamName, groupName, startId = '$') 
   }
 }
 
-/**
- * Consomme un stream de manière robuste (DLQ, Idempotence)
- * 
- * @param {string} streamName - Le nom du stream
- * @param {string} groupName - Nom du consumer group
- * @param {string} consumerName - Nom unique du process (ex: worker-1)
- * @param {function} handler - async (event) => void
- * @param {boolean} useIdempotency - Si true, utilise le Pattern A (Redis SET NX)
- */
+
 async function startConsumer(streamName, groupName, consumerName, handler, useIdempotency = true) {
   const baseRedis = await getRedisClient();
   const redis = baseRedis.duplicate();
@@ -49,7 +41,7 @@ async function startConsumer(streamName, groupName, consumerName, handler, useId
           const { id: redisId, message: event } = message;
           const { eventId, data } = event;
 
-          // Pattern A Idempotence (Redis SET NX)
+          
           if (useIdempotency) {
             const isProcessed = await redis.set(`processed:${groupName}:${eventId}`, '1', { NX: true, EX: 86400 });
             if (!isProcessed) {
@@ -65,13 +57,13 @@ async function startConsumer(streamName, groupName, consumerName, handler, useId
           } catch (err) {
             logger.error(`❌ Error processing event ${eventId}:`, err.message);
             
-            // Increment attempt count
+            
             const attemptKey = `attempts:${groupName}:${eventId}`;
             const attempts = await redis.incr(attemptKey);
             await redis.expire(attemptKey, 7 * 86400);
 
             if (useIdempotency) {
-               // Allow retry since it failed
+               
                await redis.del(`processed:${groupName}:${eventId}`);
             }
 
@@ -85,7 +77,7 @@ async function startConsumer(streamName, groupName, consumerName, handler, useId
               });
               await redis.xAck(streamName, groupName, redisId);
             }
-            // else: no xAck, will be re-delivered via PEL (Pending Entries List)
+            
           }
         }
       }

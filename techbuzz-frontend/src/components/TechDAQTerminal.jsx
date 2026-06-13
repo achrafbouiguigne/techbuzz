@@ -2,7 +2,7 @@ import React from 'react';
 import SectorRadar from './SectorRadar';
 
 export default function TechDAQTerminal({ trends, totalPosts, selectedCategory, onCategoryChange, selectedCountry, setSelectedCountry, selectedDomain, setSelectedDomain, posts }) {
-  // Sort trends by momentum descending
+  
   const sortedTrends = [...(trends || [])].sort((a, b) => b.momentum - a.momentum);
 
   return (

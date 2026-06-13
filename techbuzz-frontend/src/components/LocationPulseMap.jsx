@@ -14,7 +14,7 @@ const HUB_COORDINATES = {
 export default function LocationPulseMap({ posts, selectedCountry, setSelectedCountry }) {
   const [hoveredHub, setHoveredHub] = useState(null);
 
-  // 1. Calculate metrics per location from posts list
+  
   const locationStats = useMemo(() => {
     const stats = {};
     let maxCount = 1;
@@ -41,24 +41,24 @@ export default function LocationPulseMap({ posts, selectedCountry, setSelectedCo
           }
           stats[matchedKey].count++;
           
-          // Track category frequency
+          
           const cat = post.primary_category || 'Other';
           stats[matchedKey].categories[cat] = (stats[matchedKey].categories[cat] || 0) + 1;
         }
       });
     });
 
-    // Determine maxCount for relative scale
+    
     Object.keys(stats).forEach(k => {
       if (stats[k].count > maxCount) maxCount = stats[k].count;
     });
 
-    // Format stats with top category and weight
+    
     const formatted = {};
     Object.keys(HUB_COORDINATES).forEach(key => {
       const data = stats[key] || { count: 0, categories: {} };
       
-      // Find top category
+      
       let topCat = 'None';
       let maxCatCount = 0;
       Object.keys(data.categories).forEach(cat => {
@@ -78,7 +78,7 @@ export default function LocationPulseMap({ posts, selectedCountry, setSelectedCo
     return formatted;
   }, [posts]);
 
-  // SVG dimensions
+  
   const width = 310;
   const height = 150;
 
@@ -102,7 +102,7 @@ export default function LocationPulseMap({ posts, selectedCountry, setSelectedCo
       backdropFilter: 'blur(5px)',
       boxSizing: 'border-box'
     }}>
-      {/* Header */}
+      {}
       <div style={{
         display: 'flex',
         justifyContent: 'between',
@@ -120,7 +120,7 @@ export default function LocationPulseMap({ posts, selectedCountry, setSelectedCo
         </div>
       </div>
 
-      {/* Map SVG Schematic */}
+      {}
       <div style={{ 
         position: 'relative', 
         width: '100%', 
@@ -141,7 +141,7 @@ export default function LocationPulseMap({ posts, selectedCountry, setSelectedCo
             </filter>
           </defs>
 
-          {/* 1. Schematic Circuit Connection Lines */}
+          {}
           <path
             d="M 50 70 L 45 30 M 50 70 L 130 22 M 50 70 L 140 95 M 130 22 L 145 40 M 145 40 L 165 35 M 145 40 L 140 95 M 145 40 L 250 80 M 140 95 L 250 80 M 50 70 L 95 115 M 140 95 L 95 115"
             fill="none"
@@ -150,14 +150,14 @@ export default function LocationPulseMap({ posts, selectedCountry, setSelectedCo
             strokeDasharray="2 2"
           />
 
-          {/* 2. Interactive Hub Nodes */}
+          {}
           {Object.keys(HUB_COORDINATES).map(key => {
             const coord = HUB_COORDINATES[key];
             const stats = locationStats[key] || { count: 0, weight: 0, topCategory: 'None' };
             const isSelected = selectedCountry === key;
             const isHovered = hoveredHub?.key === key;
             
-            // Pulse circle size base
+            
             const pulseRadius = 3 + stats.weight * 10;
             
             return (
@@ -168,7 +168,7 @@ export default function LocationPulseMap({ posts, selectedCountry, setSelectedCo
                 onMouseEnter={() => setHoveredHub({ key, ...coord, ...stats })}
                 onMouseLeave={() => setHoveredHub(null)}
               >
-                {/* Glowing Radar Pulse Ring */}
+                {}
                 {stats.count > 0 && (
                   <circle
                     cx={coord.x}
@@ -185,7 +185,7 @@ export default function LocationPulseMap({ posts, selectedCountry, setSelectedCo
                   />
                 )}
 
-                {/* Core Hub point */}
+                {}
                 <circle
                   cx={coord.x}
                   cy={coord.y}
@@ -199,7 +199,7 @@ export default function LocationPulseMap({ posts, selectedCountry, setSelectedCo
                   }}
                 />
 
-                {/* Hub Labels */}
+                {}
                 <text
                   x={coord.x}
                   y={coord.y - 8}
@@ -216,7 +216,7 @@ export default function LocationPulseMap({ posts, selectedCountry, setSelectedCo
           })}
         </svg>
 
-        {/* Hover Tooltip Overlay */}
+        {}
         {hoveredHub && (
           <div style={{
             position: 'absolute',
@@ -247,7 +247,7 @@ export default function LocationPulseMap({ posts, selectedCountry, setSelectedCo
         )}
       </div>
 
-      {/* Footer Instructions */}
+      {}
       <div style={{
         display: 'flex',
         justifyContent: 'space-between',
@@ -259,7 +259,7 @@ export default function LocationPulseMap({ posts, selectedCountry, setSelectedCo
         <span>HUD TELEMETRY GRID</span>
       </div>
 
-      {/* Inject custom CSS keyframes dynamically */}
+      {}
       <style>{`
         @keyframes map-pulse {
           0% {

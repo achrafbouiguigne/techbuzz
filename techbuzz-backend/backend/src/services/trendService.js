@@ -1,8 +1,8 @@
 const EnrichedPost = require('../models/EnrichedPost');
 
-// ─────────────────────────────────────────────
-// TF-IDF : extraction de keywords sans stopwords
-// ─────────────────────────────────────────────
+
+
+
 function tokenize(text) {
   return text
     .toLowerCase()
@@ -15,7 +15,7 @@ function computeTFIDF(titles) {
   const tokenizedTitles = titles.map(tokenize);
   const N = tokenizedTitles.length;
 
-  // IDF : nombre de documents contenant chaque mot
+  
   const docFreq = {};
   for (const tokens of tokenizedTitles) {
     const unique = new Set(tokens);
@@ -33,19 +33,19 @@ function computeTFIDF(titles) {
       return;
     }
 
-    // TF
+    
     const tf = {};
     for (const word of tokens) {
       tf[word] = (tf[word] || 0) + 1 / tokens.length;
     }
 
-    // Score TF-IDF
+    
     const scores = Object.entries(tf).map(([word, tfScore]) => {
       const idf = Math.log(N / (docFreq[word] || 1));
       return { word, score: tfScore * idf };
     });
 
-    // Top 6 keywords par score décroissant, score > 0 uniquement
+    
     const keywords = scores
       .sort((a, b) => b.score - a.score)
       .slice(0, 6)
@@ -58,18 +58,18 @@ function computeTFIDF(titles) {
   return result;
 }
 
-// ─────────────────────────────────────────────
-// extractKeywords : utilisé par le NLP Worker
-// (TF-IDF sur un seul titre = fallback simple)
-// ─────────────────────────────────────────────
+
+
+
+
 function extractKeywords(title) {
   if (!title) return [];
   return tokenize(title);
 }
 
-// ─────────────────────────────────────────────
-// computeTrends : appelé par le Trend Worker
-// ─────────────────────────────────────────────
+
+
+
 async function computeTrends(hoursBack = 24) {
   const since = new Date(Date.now() - hoursBack * 60 * 60 * 1000);
   const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
@@ -79,11 +79,11 @@ async function computeTrends(hoursBack = 24) {
 
   if (posts.length === 0) return [];
 
-  // 1. TF-IDF sur le corpus complet
+  
   const titles = posts.map(p => p.title || p.content || '');
   const tfidfMap = computeTFIDF(titles);
 
-  // 2. Momentum : keywords récents
+  
   const recentTitles = recentPosts.map(p => p.title || p.content || '');
   const recentTfidfMap = computeTFIDF(recentTitles);
 
@@ -94,7 +94,7 @@ async function computeTrends(hoursBack = 24) {
     }
   }
 
-  // 3. Agrégation des tendances
+  
   const map = {};
 
   posts.forEach((post, i) => {
@@ -122,7 +122,7 @@ async function computeTrends(hoursBack = 24) {
     }
   });
 
-  // 4. Calcul final + tri
+  
   return Object.values(map)
     .map(d => {
       const avgScore   = d.count > 0 ? Math.round(d.totalScore / d.count) : 0;

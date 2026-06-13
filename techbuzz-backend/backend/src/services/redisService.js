@@ -11,7 +11,7 @@ async function publishTrends(trends) {
 }
 
 async function getLatestTrends() {
-  const cached = await publisher.get('trends:latest'); // subscriber → publisher
+  const cached = await publisher.get('trends:latest'); 
   metrics.redisConnected.set(1);
   return cached ? JSON.parse(cached) : null;
 }

@@ -10,7 +10,7 @@ const { publisher } = require('../config/redis');
 
 const pubsub = new PubSub();
 
-// Quand Redis reçoit un update → on forward à GraphQL Subscriptions
+
 subscriber.subscribe('trends:update', (message) => {
   pubsub.publish('TRENDS_UPDATED', {
     trendsUpdated: JSON.parse(message)
@@ -66,7 +66,7 @@ const runLSTMForecast = (inputObj) => {
       }
     });
 
-    // Write input JSON to standard input of the container process
+    
     logger.info('[LSTM] Writing JSON payload to stdin...');
     child.stdin.write(JSON.stringify(inputObj));
     child.stdin.end();
@@ -102,7 +102,7 @@ const resolvers = {
     predictTrends: async (_, { daysAhead = 7 }) => {
       const cacheKey = `lstm:predictions:days:${daysAhead}`;
       
-      // 1. Check Redis Cache
+      
       try {
         const cached = await publisher.get(cacheKey);
         if (cached) {
@@ -113,7 +113,7 @@ const resolvers = {
         logger.warn(`[LSTM] Cache read error: ${cacheErr.message}`);
       }
 
-      // 2. Coalesce concurrent requests (single-flight pattern)
+      
       if (activePredictTrendsPromise) {
         logger.info(`[LSTM] Joining existing active prediction promise`);
         return activePredictTrendsPromise;
@@ -131,7 +131,7 @@ const resolvers = {
           const now = new Date();
           const fourteenDaysAgo = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000);
 
-          // Optimize MongoDB query: exclude embeddings, use lean()
+          
           const posts = await EnrichedPost.find(
             { timestamp: { $gte: fourteenDaysAgo } },
             { title: 1, content: 1, timestamp: 1 }
@@ -205,7 +205,7 @@ const resolvers = {
             };
           }).filter(Boolean);
 
-          // 3. Save to Redis Cache (Expires in 5 minutes = 300 seconds)
+          
           try {
             await publisher.setEx(cacheKey, 300, JSON.stringify(results));
             logger.info(`[LSTM] Cached new predictions in Redis for key: ${cacheKey}`);

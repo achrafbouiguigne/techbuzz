@@ -1,16 +1,16 @@
--- Extension TimescaleDB
+
 CREATE EXTENSION IF NOT EXISTS timescaledb;
 
 DROP TABLE IF EXISTS trend_snapshots CASCADE;
 DROP TABLE IF EXISTS trend_predictions CASCADE;
 DROP TABLE IF EXISTS predictions CASCADE;
 
--- Table des trends v2
+
 CREATE TABLE trend_snapshots (
   ts           TIMESTAMPTZ NOT NULL,
-  dim_type     TEXT NOT NULL,         -- 'category' | 'topic' | 'keyword'
-  dim_id       TEXT NOT NULL,         -- 'AI' | 'topic_47' | 'rust async'
-  window_size  TEXT NOT NULL,         -- '1h' | '6h' | '24h'
+  dim_type     TEXT NOT NULL,         
+  dim_id       TEXT NOT NULL,         
+  window_size  TEXT NOT NULL,         
   count        INTEGER,
   velocity     DOUBLE PRECISION,
   acceleration DOUBLE PRECISION,
@@ -19,9 +19,9 @@ CREATE TABLE trend_snapshots (
 SELECT create_hypertable('trend_snapshots', 'ts');
 CREATE INDEX ON trend_snapshots (dim_type, dim_id, ts DESC);
 
--- Table des prédictions v2
+
 CREATE TABLE predictions (
-  ts            TIMESTAMPTZ NOT NULL,  -- timestamp prédit (futur)
+  ts            TIMESTAMPTZ NOT NULL,  
   dim_type      TEXT NOT NULL,
   dim_id        TEXT NOT NULL,
   cycle_id      TEXT NOT NULL,

@@ -3,8 +3,8 @@ const logger = require('../utils/logger');
 function normalizeText(text) {
   return text
     .trim()
-    .replace(/\s+/g, ' ')           // espaces multiples
-    .replace(/[^\w\s\-\/\.\,]/g, '') // caractères spéciaux
+    .replace(/\s+/g, ' ')           
+    .replace(/[^\w\s\-\/\.\,]/g, '') 
     .toLowerCase();
 }
 
@@ -29,7 +29,7 @@ function cleanPost(post) {
     title:        post.title.trim(),
     titleNorm:    normalizeText(post.title),
     subreddit:    post.subreddit.toLowerCase(),
-    score:        Math.max(0, post.scoreRaw), // utilise scoreRaw
+    score:        Math.max(0, post.scoreRaw), 
     upvoteRatio:  Math.min(1, Math.max(0, post.upvoteRatio || 0)),
     numComments:  Math.max(0, post.numComments || 0),
     cleanedAt:    new Date(),

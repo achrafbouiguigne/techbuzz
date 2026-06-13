@@ -1,13 +1,8 @@
-// ============================================================================
-// InptPulse v2 — Topic Matcher (Stratégie B)
-// ============================================================================
 
-/**
- * Calcule la similarité cosinus entre deux vecteurs.
- * @param {number[]} vecA 
- * @param {number[]} vecB 
- * @returns {number}
- */
+
+
+
+
 function cosineSimilarity(vecA, vecB) {
   if (!vecA || !vecB || vecA.length !== vecB.length) return 0;
   let dotProduct = 0;
@@ -22,12 +17,7 @@ function cosineSimilarity(vecA, vecB) {
   return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
 }
 
-/**
- * Trouve le topic le plus proche dans le registre.
- * @param {number[]} postEmbedding - L'embedding du post (décodé)
- * @param {object} registry - Le topic_registry { "topic_47": { centroid: [...], label: "..." } }
- * @returns {object} { topicId, score, label }
- */
+
 function findMatchingTopic(postEmbedding, registry) {
   let bestTopicId = null;
   let bestScore = -1;
@@ -42,7 +32,7 @@ function findMatchingTopic(postEmbedding, registry) {
     }
   }
 
-  // Seuil de Stratégie B: > 0.7
+  
   if (bestScore >= 0.7) {
     return { topicId: bestTopicId, score: bestScore, label: bestLabel };
   }

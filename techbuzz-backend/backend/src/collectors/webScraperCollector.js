@@ -6,9 +6,9 @@ const RawPost = require('../models/RawPost');
 const logger = require('../utils/logger');
 const { isTechnicallyRelevant } = require('./redditCollector');
 
-// ─────────────────────────────────────────────
-// FETCH DEV.TO ARTICLES
-// ─────────────────────────────────────────────
+
+
+
 async function fetchDevToArticles(tag, limit = 15, page = 1) {
   try {
     const url = `https://dev.to/api/articles?tag=${tag}&per_page=${limit}&page=${page}`;
@@ -29,7 +29,7 @@ async function fetchDevToArticles(tag, limit = 15, page = 1) {
     }
 
     return res.data.map(article => {
-      // Map tags to keywords for categoryService mapping
+      
       const tags = article.tag_list || [];
       const category = getCategory([...tags, tag]);
 
@@ -38,7 +38,7 @@ async function fetchDevToArticles(tag, limit = 15, page = 1) {
         title: article.title,
         content: article.description || article.title,
         author: article.user?.username || 'devto_user',
-        subreddit: tag, // Map tag as subreddit so it fits validation
+        subreddit: tag, 
         scoreRaw: article.public_reactions_count || 10,
         scoreNorm: Math.max(0, article.public_reactions_count || 10),
         upvoteRatio: 1.0,
@@ -56,9 +56,9 @@ async function fetchDevToArticles(tag, limit = 15, page = 1) {
   }
 }
 
-// ─────────────────────────────────────────────
-// FETCH HACKER NEWS STORIES
-// ─────────────────────────────────────────────
+
+
+
 async function fetchHackerNewsStories(limit = 30) {
   try {
     const url = `https://hn.algolia.com/api/v1/search_by_date?tags=story&hitsPerPage=${limit}`;
@@ -70,12 +70,12 @@ async function fetchHackerNewsStories(limit = 30) {
     }
 
     return res.data.hits.map(hit => {
-      // Analyze title and url keywords to guess categories
+      
       const titleLower = (hit.title || '').toLowerCase();
       const keywords = titleLower.split(/\b/);
       const category = getCategory(keywords);
 
-      // Determine a pseudo-subreddit name based on guessed category
+      
       const subreddit = category === 'Other' ? 'programming' : category.toLowerCase();
 
       return {
@@ -83,7 +83,7 @@ async function fetchHackerNewsStories(limit = 30) {
         title: hit.title || 'Untitled HN Post',
         content: hit.story_text || hit.title || '',
         author: hit.author || 'hn_user',
-        subreddit, // Fits validation
+        subreddit, 
         scoreRaw: hit.points || 10,
         scoreNorm: Math.max(0, hit.points || 10),
         upvoteRatio: 1.0,
@@ -101,9 +101,9 @@ async function fetchHackerNewsStories(limit = 30) {
   }
 }
 
-// ─────────────────────────────────────────────
-// SAVE TO MONGODB (for audits/debugging)
-// ─────────────────────────────────────────────
+
+
+
 async function saveRawPost(post) {
   try {
     const doc = new RawPost({
@@ -133,9 +133,9 @@ async function saveRawPost(post) {
   }
 }
 
-// ─────────────────────────────────────────────
-// MAIN SCRAPER COLLECTOR
-// ─────────────────────────────────────────────
+
+
+
 async function fetchWebScraperPosts() {
   logger.info(`[Scraper] Starting Web Scraper collect (Dev.to & Hacker News)...`);
 
@@ -146,26 +146,26 @@ async function fetchWebScraperPosts() {
   ];
   const allScraped = [];
 
-  // Pick a random page to ensure fresh posts on each cycle
+  
   const page = Math.floor(Math.random() * 5) + 1;
 
-  // 1. Fetch Dev.to tagged feeds
+  
   for (const tag of tags) {
     logger.info(`[Scraper] Fetching Dev.to tag: ${tag} (page ${page})...`);
     const articles = await fetchDevToArticles(tag, 15, page);
     allScraped.push(...articles);
-    // Cool down between requests to prevent rate limiting
+    
     await new Promise(res => setTimeout(res, 500));
   }
 
-  // 2. Fetch Hacker News front-page / trending stories
+  
   logger.info(`[Scraper] Fetching Hacker News trending articles...`);
   const hnStories = await fetchHackerNewsStories();
   allScraped.push(...hnStories);
 
   logger.info(`[Scraper] Total raw posts scraped: ${allScraped.length}`);
 
-  // 3. Relevance Filtering
+  
   let filteredCount = 0;
   const relevantPosts = allScraped.filter(post => {
     const check = isTechnicallyRelevant(post);
@@ -179,7 +179,7 @@ async function fetchWebScraperPosts() {
 
   logger.info(`[Scraper] Pertinents: ${relevantPosts.length} | Rejected: ${filteredCount}`);
 
-  // 4. Enqueue relevant posts
+  
   if (relevantPosts.length > 0) {
     let sentCount = 0;
     let errorCount = 0;
@@ -214,7 +214,7 @@ async function fetchWebScraperPosts() {
     logger.info(`[Stream] Scraper → ${sentCount} posts sent to Redis Stream (errors: ${errorCount})`);
   }
 
-  // 5. Persist raw documents in MongoDB for audit logs
+  
   for (const post of allScraped) {
     await saveRawPost(post);
   }

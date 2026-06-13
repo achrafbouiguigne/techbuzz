@@ -16,11 +16,11 @@ export default function TickerTape({ trends }) {
               <span className={`ticker-momentum ${isPositive ? 'bull' : 'bear'}`}>
                 {isPositive ? '▲' : '▼'} {Math.abs(trend.momentum)}
               </span>
-              <span className="ticker-separator">///</span>
+              <span className="ticker-separator">
             </div>
           );
         })}
-        {/* Duplicate for infinite seamless scrolling */}
+        {}
         {sortedTrends.map(trend => {
           const isPositive = trend.momentum >= 0;
           return (
@@ -29,7 +29,7 @@ export default function TickerTape({ trends }) {
               <span className={`ticker-momentum ${isPositive ? 'bull' : 'bear'}`}>
                 {isPositive ? '▲' : '▼'} {Math.abs(trend.momentum)}
               </span>
-              <span className="ticker-separator">///</span>
+              <span className="ticker-separator">
             </div>
           );
         })}

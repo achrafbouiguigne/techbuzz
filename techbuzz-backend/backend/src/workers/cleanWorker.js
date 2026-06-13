@@ -14,13 +14,13 @@ const cleanWorker = createWorker('raw_posts', async (job) => {
   const post = job.data;
 
   try {
-    // 1. Nettoie et valide
+    
     const cleaned = cleanPost(post);
     if (!cleaned) {
       failedCount++;
       return { skipped: true, reason: 'invalid post' };
     }
-  // 2. Persiste dans posts_clean
+  
   try {
     const doc = new CleanPost(cleaned);
     await doc.save();
@@ -37,19 +37,19 @@ const cleanWorker = createWorker('raw_posts', async (job) => {
     }
   }
 
-  // 3. Envoie vers la queue suivante
+  
   await processedQueue.add('enrich-post', cleaned, {
-    priority: post.score > 100 ? 1 : 2,  // posts populaires prioritaires
+    priority: post.score > 100 ? 1 : 2,  
   });
 
   processedCount++;
   return { success: true, redditId: post.redditId };
  } finally{end();} }
 , {
-  concurrency: 10,  // 10 posts nettoyés en parallèle
+  concurrency: 10,  
 });
 
-// Stats toutes les minutes
+
 setInterval(() => {
   logger.info(`[CleanWorker] Stats — traités: ${processedCount} | invalides: ${failedCount}`);
 }, 60000);

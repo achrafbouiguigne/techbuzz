@@ -234,7 +234,7 @@ function generateMockLLMResponse(country, domain, trends) {
 async function getAIRecommendation(country, domain) {
   const cacheKey = `ai:recommendation:${country}:${domain}`;
   
-  // 1. Check Redis Cache
+  
   try {
     const cached = await publisher.get(cacheKey);
     if (cached) {
@@ -329,7 +329,7 @@ CONSTRAINTS FOR "roadmap":
       roadmap: parsed.roadmap || []
     };
 
-    // 3. Save to Redis Cache (Expires in 2 hours = 7200 seconds)
+    
     try {
       await publisher.setEx(cacheKey, 7200, JSON.stringify(recommendation));
       logger.info(`[AI Service] Cached new recommendation in Redis for key: ${cacheKey}`);
@@ -345,7 +345,7 @@ CONSTRAINTS FOR "roadmap":
       logger.error(`[AI Service] Error calling Gemini API: ${error.message}`);
     }
     
-    // Instead of falling back to a dry static fallback, generate a DYNAMIC mock response that references current trends!
+    
     const trends = await getLatestTrends() || [];
     const mockRes = generateMockLLMResponse(country, domain, trends);
     const recommendation = {

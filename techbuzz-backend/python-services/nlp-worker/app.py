@@ -69,7 +69,7 @@ async def extract_keywords(text):
     return await loop.run_in_executor(None, _run)
 
 async def classify_text(text):
-    # Fast path rule-based classification to prevent heavy DeBERTa CPU execution
+    
     text_lower = text.lower()
     fast_primary = None
     
@@ -139,7 +139,7 @@ async def generate_embedding(text):
     return await loop.run_in_executor(None, _run)
 
 def handle_post_filtered_it(event_data):
-    # event_data is the envelope. The actual post payload is a JSON string in 'data'
+    
     try:
         post = json.loads(event_data.get('data', '{}'))
     except Exception as e:
@@ -148,13 +148,13 @@ def handle_post_filtered_it(event_data):
 
     text = f"{post.get('title', '')} {post.get('content', '')}".strip()
     
-    # ---------------------------------------------------------
-    # Job Seeker Features: Extract Companies and Locations
-    # ---------------------------------------------------------
+    
+    
+    
     def extract_entities(text_content):
         text_lower = text_content.lower()
         
-        # Dictionaries
+        
         TECH_COMPANIES = ["google", "microsoft", "meta", "facebook", "amazon", "aws", "apple", "netflix", "openai", "stripe", "spotify", "uber", "airbnb", "ibm", "oracle", "salesforce", "github", "gitlab", "docker", "hashicorp"]
         LOCATIONS = ["remote", "usa", "france", "paris", "london", "uk", "india", "germany", "berlin", "canada", "toronto", "san francisco", "new york", "silicon valley", "europe", "morocco", "maroc", "casablanca", "rabat"]
         
@@ -168,7 +168,7 @@ def handle_post_filtered_it(event_data):
         logger.warning(f"Text too short for post {post.get('external_id')}. Raw event_data: {event_data}")
         return
 
-    # Run ML tasks synchronously in this handler (asyncio wrapper)
+    
     async def run_pipeline():
         keywords = await extract_keywords(text)
         classification = await classify_text(text)

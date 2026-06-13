@@ -1,6 +1,6 @@
-// ============================================================================
-// InptPulse v2 — Classifier Worker (Rule-based pre-filter)
-// ============================================================================
+
+
+
 
 const { startConsumer } = require('../events/consumer');
 const { publishEvent } = require('../events/publisher');
@@ -39,7 +39,7 @@ async function handlePostCollected(event) {
     );
     logger.debug(`✅ Post ${event.aggregateId} is IT related.`);
   } else {
-    // We publish this purely for monitoring/metrics
+    
     await publishEvent(
       STREAMS.POST_FILTERED_NON_IT,
       'PostFilteredAsNonIT',
@@ -51,11 +51,11 @@ async function handlePostCollected(event) {
   }
 }
 
-// Start consumer if this file is executed directly or required by app.js
+
 startConsumer(
   STREAMS.POST_COLLECTED,
   'classifier-group',
   'classifier-worker-1',
   handlePostCollected,
-  true // use Idempotency Pattern A
+  true 
 ).catch(err => logger.error('Consumer crashed:', err));

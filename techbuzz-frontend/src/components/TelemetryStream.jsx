@@ -5,7 +5,7 @@ export default function TelemetryStream({ posts }) {
   const lastPostsLength = useRef(posts.length);
   const containerRef = useRef(null);
 
-  // Generate a list of standard startup logs when the component mounts
+  
   useEffect(() => {
     const startupLogs = [
       { text: "SYSTEM BOOT: TechDAQ Event Pipeline initialized.", type: "system" },
@@ -17,7 +17,7 @@ export default function TelemetryStream({ posts }) {
     
     const timers = [];
 
-    // Add logs with a small delay for typewriter effect on start
+    
     startupLogs.forEach((log, index) => {
       const t = setTimeout(() => {
         const time = new Date().toLocaleTimeString();
@@ -29,11 +29,11 @@ export default function TelemetryStream({ posts }) {
     return () => timers.forEach(t => clearTimeout(t));
   }, []);
 
-  // Watch for new posts arriving and stream their pipeline events
+  
   useEffect(() => {
     const timers = [];
 
-    // Check if new posts arrived
+    
     if (posts.length > lastPostsLength.current) {
       const newPosts = [...posts]
         .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp))
@@ -43,7 +43,7 @@ export default function TelemetryStream({ posts }) {
         const time = new Date().toLocaleTimeString();
         const sub = post.subreddit || 'tech';
         
-        // Phase 1: Collected
+        
         const t1 = setTimeout(() => {
           setLogs(prev => [
             ...prev, 
@@ -51,7 +51,7 @@ export default function TelemetryStream({ posts }) {
           ].slice(-10));
         }, index * 1500);
 
-        // Phase 2: Classified
+        
         const t2 = setTimeout(() => {
           setLogs(prev => [
             ...prev, 
@@ -59,7 +59,7 @@ export default function TelemetryStream({ posts }) {
           ].slice(-10));
         }, index * 1500 + 400);
 
-        // Phase 3: Enriched
+        
         const t3 = setTimeout(() => {
           setLogs(prev => [
             ...prev, 
@@ -67,7 +67,7 @@ export default function TelemetryStream({ posts }) {
           ].slice(-10));
         }, index * 1500 + 850);
 
-        // Phase 4: Saved
+        
         const t4 = setTimeout(() => {
           setLogs(prev => [
             ...prev, 
@@ -83,21 +83,21 @@ export default function TelemetryStream({ posts }) {
     return () => timers.forEach(t => clearTimeout(t));
   }, [posts]);
 
-  // Scroll to bottom of terminal whenever logs change
+  
   useEffect(() => {
     if (containerRef.current) {
       containerRef.current.scrollTop = containerRef.current.scrollHeight;
     }
   }, [logs]);
 
-  // Dynamic colors for log types
+  
   const getLogStyle = (type) => {
     switch (type) {
-      case 'system': return { color: '#00ffff' }; // Cyan
-      case 'collected': return { color: 'var(--text-main)' }; // Whiteish
-      case 'classified': return { color: '#ffff00' }; // Yellow
-      case 'enriched': return { color: '#bc13fe' }; // Purple
-      case 'persisted': return { color: 'var(--neon-green)' }; // Neon Green
+      case 'system': return { color: '#00ffff' }; 
+      case 'collected': return { color: 'var(--text-main)' }; 
+      case 'classified': return { color: '#ffff00' }; 
+      case 'enriched': return { color: '#bc13fe' }; 
+      case 'persisted': return { color: 'var(--neon-green)' }; 
       default: return { color: 'var(--text-muted)' };
     }
   };
@@ -122,7 +122,7 @@ export default function TelemetryStream({ posts }) {
       backdropFilter: 'blur(5px)',
       boxSizing: 'border-box'
     }}>
-      {/* Header */}
+      {}
       <div style={{
         display: 'flex',
         justifyContent: 'between',
@@ -140,7 +140,7 @@ export default function TelemetryStream({ posts }) {
         </div>
       </div>
 
-      {/* Terminal Screen */}
+      {}
       <div 
         ref={containerRef}
         style={{

@@ -5,7 +5,7 @@ const { Client } = require('pg');
 async function resetDb() {
   console.log('🔄 Wiping databases for InptPulse v2...');
   
-  // MongoDB
+  
   try {
     const mongoUri = process.env.MONGO_URI || 'mongodb://admin:password123@localhost:27017/techbuzz?authSource=admin';
     await mongoose.connect(mongoUri);
@@ -17,7 +17,7 @@ async function resetDb() {
     await mongoose.disconnect();
   }
 
-  // TimescaleDB
+  
   const client = new Client({
     user: process.env.POSTGRES_USER || 'admin',
     host: process.env.POSTGRES_HOST || 'localhost',
@@ -28,12 +28,12 @@ async function resetDb() {
 
   try {
     await client.connect();
-    // Drop existing tables
+    
     await client.query('DROP TABLE IF EXISTS trend_snapshots CASCADE');
     await client.query('DROP TABLE IF EXISTS predictions CASCADE');
-    await client.query('DROP TABLE IF EXISTS trend_predictions CASCADE'); // from v1
+    await client.query('DROP TABLE IF EXISTS trend_predictions CASCADE'); 
     
-    // Recreate the tables
+    
     await client.query(`
       CREATE TABLE trend_snapshots (
         ts           TIMESTAMPTZ NOT NULL,

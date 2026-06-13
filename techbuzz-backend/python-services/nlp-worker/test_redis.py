@@ -6,11 +6,11 @@ def check():
     print(f"Connecting to Redis at {url}...")
     client = redis.from_url(url)
     
-    # Try ping
+    
     ping = client.ping()
     print(f"Ping result: {ping}")
     
-    # Try reading from events:PostFilteredAsIT
+    
     print("Reading from stream events:PostFilteredAsIT...")
     res = client.xreadgroup(
         groupname="nlp-group",

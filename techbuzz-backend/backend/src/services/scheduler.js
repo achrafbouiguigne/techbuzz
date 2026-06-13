@@ -9,13 +9,13 @@ async function runCollection() {
   const startTime = Date.now();
 
   try {
-    // Run both collection pipelines concurrently
+    
     const results = await Promise.allSettled([
       fetchAllSubreddits(),
       fetchWebScraperPosts()
     ]);
 
-    // Handle Reddit collection results
+    
     if (results[0].status === 'fulfilled') {
       const posts = results[0].value || [];
       metrics.postsCollected.inc(posts.length);
@@ -24,7 +24,7 @@ async function runCollection() {
       logger.error(`[Scheduler] Reddit collector failed:`, results[0].reason?.message || results[0].reason);
     }
 
-    // Handle Web Scraper (Dev.to/HN) results
+    
     if (results[1].status === 'fulfilled') {
       const posts = results[1].value || [];
       metrics.postsCollected.inc(posts.length);
@@ -42,10 +42,10 @@ async function runCollection() {
 }
 
 function startScheduler() {
-  // Launch immediately on boot
+  
   runCollection();
 
-  // Ingest every 10 minutes
+  
   cron.schedule('*/10 * * * *', runCollection);
 
   logger.info('[Scheduler] Ingestion cron job scheduled (every 10 minutes)');

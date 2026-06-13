@@ -77,7 +77,7 @@ function getMockPosts(sub) {
     return MOCK_DATA[sub];
   }
   
-  // Generic fallback if not defined
+  
   return [
     {
       title: `Top trends in r/${sub} for 2026`,
@@ -99,7 +99,7 @@ function getMockPosts(sub) {
 async function backfillReddit() {
   console.log('🔄 Starting Reddit backfill for v2...');
   
-  // ensure redis is ready
+  
   await redisConfig.getRedisClient();
 
   let totalCollected = 0;
@@ -116,7 +116,7 @@ async function backfillReddit() {
       });
       posts = res.data.data.children.map(c => c.data);
       console.log(`✅ Successfully fetched ${posts.length} posts from r/${sub}`);
-      // Ensure specific mock posts are always seeded even if Reddit API succeeds
+      
       if (MOCK_DATA[sub]) {
         posts = [...posts, ...MOCK_DATA[sub]];
       }
@@ -126,7 +126,7 @@ async function backfillReddit() {
     }
 
     for (const post of posts) {
-      if (!post.selftext && !post.title) continue; // skip empty
+      if (!post.selftext && !post.title) continue; 
 
       const payload = {
         source: 'reddit',
@@ -151,7 +151,7 @@ async function backfillReddit() {
       totalCollected++;
     }
     
-    // sleep to avoid rate limiting
+    
     await new Promise(res => setTimeout(res, 500));
   }
 

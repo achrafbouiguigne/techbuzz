@@ -1,20 +1,20 @@
-// ============================================================================
-// InptPulse v2 — Script de remise à zéro complète
-// ============================================================================
-//
-// USAGE :
-//   node scripts/reset-db.js              # mode confirmation interactive
-//   node scripts/reset-db.js --force      # sans confirmation (CI / scripts)
-//
-// CE QUE FAIT LE SCRIPT :
-//   1. Drop la base MongoDB (toutes collections : enriched_posts, etc.)
-//   2. Drop & recrée les tables TimescaleDB (trend_snapshots, predictions)
-//      via le schema.sql
-//   3. Flush Redis (streams, DLQ, cache, topic_registry, BullMQ jobs,
-//      compteurs d'idempotence)
-//
-// ⚠️ DESTRUCTIF — toutes les données sont perdues.
-// ============================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 require('dotenv').config();
 
@@ -26,9 +26,9 @@ const mongoose = require('mongoose');
 const { Client: PgClient } = require('pg');
 const Redis = require('ioredis');
 
-// ----------------------------------------------------------------------------
-// Configuration depuis l'env
-// ----------------------------------------------------------------------------
+
+
+
 
 const CONFIG = {
     mongo: {
@@ -49,9 +49,9 @@ const CONFIG = {
     schemaSqlPath: path.resolve(__dirname, '../../../init-timescaledb/schema.sql')
 };
 
-// ----------------------------------------------------------------------------
-// Helpers
-// ----------------------------------------------------------------------------
+
+
+
 
 const log = {
     info:  (msg) => console.log(`\x1b[36m[reset-db]\x1b[0m ${msg}`),
@@ -73,9 +73,9 @@ function confirm(question) {
     });
 }
 
-// ----------------------------------------------------------------------------
-// MongoDB — drop complet de la base
-// ----------------------------------------------------------------------------
+
+
+
 
 async function resetMongo() {
     log.info(`MongoDB : connexion à ${CONFIG.mongo.uri} (base: ${CONFIG.mongo.db})`);
@@ -86,8 +86,8 @@ async function resetMongo() {
     await mongoose.connection.db.dropDatabase();
     log.ok(`MongoDB : base "${CONFIG.mongo.db}" droppée`);
 
-    // Reconnecte et crée la collection avec ses index en chargeant le modèle
-    // (Mongoose crée les index au premier accès si on lui demande)
+    
+    
     const EnrichedPost = require('../models/EnrichedPost');
     await EnrichedPost.createCollection();
     await EnrichedPost.syncIndexes();
@@ -96,9 +96,9 @@ async function resetMongo() {
     await mongoose.disconnect();
 }
 
-// ----------------------------------------------------------------------------
-// TimescaleDB — drop + recréation via schema.sql
-// ----------------------------------------------------------------------------
+
+
+
 
 async function resetTimescaleDB() {
     log.info(`TimescaleDB : connexion à ${CONFIG.postgres.host}:${CONFIG.postgres.port}/${CONFIG.postgres.database}`);
@@ -106,8 +106,8 @@ async function resetTimescaleDB() {
     const client = new PgClient(CONFIG.postgres);
     await client.connect();
 
-    // Le schema.sql contient déjà les DROP TABLE IF EXISTS, donc il est
-    // idempotent. On l'exécute tel quel.
+    
+    
     if (!fs.existsSync(CONFIG.schemaSqlPath)) {
         throw new Error(`Schema SQL introuvable : ${CONFIG.schemaSqlPath}`);
     }
@@ -117,7 +117,7 @@ async function resetTimescaleDB() {
     await client.query(sql);
     log.ok(`TimescaleDB : tables trend_snapshots et predictions recréées`);
 
-    // Vérification rapide
+    
     const { rows } = await client.query(`
         SELECT hypertable_name
         FROM timescaledb_information.hypertables
@@ -129,9 +129,9 @@ async function resetTimescaleDB() {
     await client.end();
 }
 
-// ----------------------------------------------------------------------------
-// Redis — flush total (streams, DLQ, cache, BullMQ, idempotence)
-// ----------------------------------------------------------------------------
+
+
+
 
 async function resetRedis() {
     log.info(`Redis : connexion à ${CONFIG.redis.host}:${CONFIG.redis.port}`);
@@ -150,9 +150,9 @@ async function resetRedis() {
     await redis.quit();
 }
 
-// ----------------------------------------------------------------------------
-// Main
-// ----------------------------------------------------------------------------
+
+
+
 
 async function main() {
     const force = process.argv.includes('--force');

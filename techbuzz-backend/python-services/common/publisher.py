@@ -17,7 +17,7 @@ def publish_event(redis_client, stream_name, event_type, aggregate_id, producer,
         "data": json.dumps(payload)
     }
 
-    # xadd with MAXLEN ~ 500k to prevent unbounded memory growth
+    
     redis_client.xadd(
         stream_name,
         fields=envelope,

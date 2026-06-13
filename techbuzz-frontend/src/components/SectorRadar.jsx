@@ -1,23 +1,23 @@
 import React, { useMemo, useState } from 'react';
 
-// Color map for glowing vertices matching Universe3D
+
 const CATEGORY_COLORS = {
-  "AI": "#00ff41", // Neon Green
-  "Frontend": "#00ffff", // Cyan
-  "Backend": "#ff003c", // Crimson Red
-  "DevOps": "#bc13fe", // Purple
-  "Database": "#ffaa00", // Orange
-  "Languages": "#ffff00", // Yellow
-  "Security": "#ff0000", // Red
-  "Mobile": "#0066ff", // Blue
-  "DataEng": "#00f0ff", // Bright Cyan
-  "Other": "#ffffff" // White
+  "AI": "#00ff41", 
+  "Frontend": "#00ffff", 
+  "Backend": "#ff003c", 
+  "DevOps": "#bc13fe", 
+  "Database": "#ffaa00", 
+  "Languages": "#ffff00", 
+  "Security": "#ff0000", 
+  "Mobile": "#0066ff", 
+  "DataEng": "#00f0ff", 
+  "Other": "#ffffff" 
 };
 
 export default function SectorRadar({ posts, onSelectCategory, selectedCategory }) {
   const [hoveredPoint, setHoveredPoint] = useState(null);
 
-  // 1. Calculate live statistics per category from the current posts
+  
   const radarData = useMemo(() => {
     const stats = {};
     let maxCount = 1;
@@ -28,13 +28,13 @@ export default function SectorRadar({ posts, onSelectCategory, selectedCategory 
         stats[cat] = { count: 0, sentimentSum: 0, confidenceSum: 0 };
       }
       stats[cat].count++;
-      stats[cat].sentimentSum += post.confidence || 0.5; // using confidence as score proxy
+      stats[cat].sentimentSum += post.confidence || 0.5; 
       stats[cat].confidenceSum += post.confidence || 0.5;
     });
 
-    const categories = Object.keys(stats).filter(c => c !== 'Other').slice(0, 7); // keep top 7 sectors for clean spacing
+    const categories = Object.keys(stats).filter(c => c !== 'Other').slice(0, 7); 
     if (categories.length < 3) {
-      // Fallback/standard categories if data is sparse
+      
       ['AI', 'Frontend', 'Backend', 'DevOps', 'Database', 'Mobile', 'Languages'].forEach(c => {
         if (!stats[c]) stats[c] = { count: 0, sentimentSum: 0, confidenceSum: 0 };
       });
@@ -53,19 +53,19 @@ export default function SectorRadar({ posts, onSelectCategory, selectedCategory 
       const avgSentiment = count > 0 ? (stats[cat].sentimentSum / count) : 0.5;
       return {
         name: cat,
-        value: Math.max(0.15, score), // ensure a small minimum radius for layout aesthetics
+        value: Math.max(0.15, score), 
         count,
         avgSentiment
       };
     });
   }, [posts]);
 
-  // SVG parameters
+  
   const size = 260;
   const center = size / 2;
   const maxRadius = size * 0.38;
 
-  // Calculate coordinates for vertices
+  
   const polygonPoints = useMemo(() => {
     const numPoints = radarData.length;
     return radarData.map((d, i) => {
@@ -81,7 +81,7 @@ export default function SectorRadar({ posts, onSelectCategory, selectedCategory 
     });
   }, [radarData, center, maxRadius]);
 
-  // Generate web background grid rings
+  
   const grids = [0.2, 0.4, 0.6, 0.8, 1.0];
 
   return (
@@ -107,7 +107,7 @@ export default function SectorRadar({ posts, onSelectCategory, selectedCategory 
       <div style={{ position: 'relative', width: `${size}px`, height: `${size}px` }}>
         <svg width={size} height={size} style={{ overflow: 'visible' }}>
           <defs>
-            {/* Cyberpunk Neon Glow Filters */}
+            {}
             <filter id="radar-glow" x="-20%" y="-20%" width="140%" height="140%">
               <feGaussianBlur stdDeviation="3" result="blur" />
               <feMerge>
@@ -117,7 +117,7 @@ export default function SectorRadar({ posts, onSelectCategory, selectedCategory 
             </filter>
           </defs>
 
-          {/* 1. Concentric spiderweb background grid lines */}
+          {}
           {grids.map((gridVal, gIdx) => {
             const pointsStr = radarData.map((_, i) => {
               const angle = (i * 2 * Math.PI) / radarData.length - Math.PI / 2;
@@ -138,7 +138,7 @@ export default function SectorRadar({ posts, onSelectCategory, selectedCategory 
             );
           })}
 
-          {/* 2. Axis lines from center to outer limits */}
+          {}
           {radarData.map((_, i) => {
             const angle = (i * 2 * Math.PI) / radarData.length - Math.PI / 2;
             const xOuter = center + maxRadius * Math.cos(angle);
@@ -156,7 +156,7 @@ export default function SectorRadar({ posts, onSelectCategory, selectedCategory 
             );
           })}
 
-          {/* 3. Glowing neon data polygon overlay */}
+          {}
           <polygon
             points={polygonPoints.map(p => `${p.x},${p.y}`).join(' ')}
             fill="rgba(0, 255, 65, 0.12)"
@@ -165,7 +165,7 @@ export default function SectorRadar({ posts, onSelectCategory, selectedCategory 
             style={{ filter: 'url(#radar-glow)' }}
           />
 
-          {/* 4. Interactive vertices (nodes) */}
+          {}
           {polygonPoints.map((p, i) => {
             const color = CATEGORY_COLORS[p.name] || '#ffffff';
             const isSelected = selectedCategory === p.name;
@@ -192,14 +192,14 @@ export default function SectorRadar({ posts, onSelectCategory, selectedCategory 
                   }}
                 />
 
-                {/* Labels outside the radar bounds */}
+                {}
                 {(() => {
                   const angle = (i * 2 * Math.PI) / radarData.length - Math.PI / 2;
                   const labelRadius = maxRadius + 16;
                   const xText = center + labelRadius * Math.cos(angle);
-                  const yText = center + labelRadius * Math.sin(angle) + 4; // slight vertical adjustments
+                  const yText = center + labelRadius * Math.sin(angle) + 4; 
 
-                  // Text alignments based on angle
+                  
                   let textAnchor = "middle";
                   if (Math.cos(angle) > 0.2) textAnchor = "start";
                   if (Math.cos(angle) < -0.2) textAnchor = "end";
@@ -227,7 +227,7 @@ export default function SectorRadar({ posts, onSelectCategory, selectedCategory 
           })}
         </svg>
 
-        {/* 5. Cyberpunk HUD overlay values for hovered node */}
+        {}
         {hoveredPoint && (
           <div style={{
             position: 'absolute',

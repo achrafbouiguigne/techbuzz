@@ -14,7 +14,7 @@ const postSchema = new mongoose.Schema({
   collectedAt: { type: Date, default: Date.now },
   sentiment: { type: String, enum: ['positive', 'negative', 'neutral'] },
   sentimentScore: { type: Number, default: 0 },
-  category: { type: String }, // 'AI', 'DevOps', 'Languages', 'Cloud', 'Database'
+  category: { type: String }, 
   momentum: { type: Number, default: 0 },
   collectedAt: { type: Date, default: Date.now },
 });

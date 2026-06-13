@@ -11,8 +11,8 @@ const RawPostSchema = new mongoose.Schema({
   numComments: { type: Number },
   url:         { type: String },
   flair:       { type: String },
-  createdAt:   { type: Date },       // date du post sur Reddit
-  collectedAt: { type: Date, default: Date.now }, // date de collecte
+  createdAt:   { type: Date },       
+  collectedAt: { type: Date, default: Date.now }, 
 }, {
   collection: 'posts_raw'
 });

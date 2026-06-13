@@ -24,7 +24,7 @@ def start_consumer(redis_client, stream_name, group_name, consumer_name, handler
 
     while True:
         try:
-            # Read from stream
+            
             results = redis_client.xreadgroup(
                 groupname=group_name,
                 consumername=consumer_name,
@@ -38,7 +38,7 @@ def start_consumer(redis_client, stream_name, group_name, consumer_name, handler
 
             for stream, messages in results:
                 for message_id, event in messages:
-                    # decode event fields if they are bytes
+                    
                     event_decoded = {k.decode('utf-8') if isinstance(k, bytes) else k: 
                                      v.decode('utf-8') if isinstance(v, bytes) else v 
                                      for k, v in event.items()}
@@ -76,7 +76,7 @@ def start_consumer(redis_client, stream_name, group_name, consumer_name, handler
                                 }
                             )
                             redis_client.xack(stream_name, group_name, message_id)
-                        # else: no xack, will be re-delivered
+                        
 
         except Exception as e:
             logger.error(f"❌ Consumer loop error: {e}")

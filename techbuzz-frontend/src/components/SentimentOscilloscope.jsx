@@ -3,20 +3,20 @@ import React, { useMemo, useState } from 'react';
 export default function SentimentOscilloscope({ posts }) {
   const [hoveredPoint, setHoveredPoint] = useState(null);
 
-  // 1. Get the latest 15 enriched posts, ordered by timestamp ascending (left to right)
+  
   const timelineData = useMemo(() => {
     return [...posts]
       .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp))
-      .slice(-15); // get the 15 most recent datagrams
+      .slice(-15); 
   }, [posts]);
 
-  // SVG parameters
+  
   const width = 310;
   const height = 110;
   const paddingX = 15;
   const paddingY = 15;
 
-  // 2. Map posts to points on the grid
+  
   const points = useMemo(() => {
     if (timelineData.length < 2) return [];
 
@@ -24,7 +24,7 @@ export default function SentimentOscilloscope({ posts }) {
     
     return timelineData.map((post, idx) => {
       const x = paddingX + idx * stepX;
-      // Map confidence (0 to 1) to y coordinate (higher confidence -> higher peak / lower Y coordinate in SVG)
+      
       const confidence = post.confidence || 0.5;
       const y = height - paddingY - confidence * (height - paddingY * 2);
       
@@ -37,14 +37,14 @@ export default function SentimentOscilloscope({ posts }) {
     });
   }, [timelineData, width, height]);
 
-  // Construct SVG Path string for the line
+  
   const pathD = useMemo(() => {
     if (points.length < 2) return '';
-    // Draw a sharp tech line (segmented)
+    
     return points.map((p, idx) => `${idx === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
   }, [points]);
 
-  // Construct SVG Path string for the glowing area under the line
+  
   const areaD = useMemo(() => {
     if (points.length < 2) return '';
     const start = points[0];
@@ -53,15 +53,15 @@ export default function SentimentOscilloscope({ posts }) {
     return `M ${start.x} ${height - paddingY} L ${start.x} ${start.y} ${linePath} L ${end.x} ${height - paddingY} Z`;
   }, [points, height]);
 
-  // Generate background grid lines
+  
   const gridLines = useMemo(() => {
     const lines = [];
-    // Horizontal grid lines
+    
     for (let i = 1; i <= 3; i++) {
       const y = paddingY + (i * (height - paddingY * 2)) / 4;
       lines.push(<line key={`h-${i}`} x1={0} y1={y} x2={width} y2={y} stroke="rgba(0, 255, 65, 0.05)" strokeDasharray="3 3" />);
     }
-    // Vertical grid lines
+    
     for (let i = 1; i <= 4; i++) {
       const x = paddingX + (i * (width - paddingX * 2)) / 5;
       lines.push(<line key={`v-${i}`} x1={x} y1={0} x2={x} y2={height} stroke="rgba(0, 255, 65, 0.05)" strokeDasharray="3 3" />);
@@ -87,7 +87,7 @@ export default function SentimentOscilloscope({ posts }) {
       animation: 'fadeIn 0.5s ease',
       backdropFilter: 'blur(5px)'
     }}>
-      {/* HUD Header */}
+      {}
       <div style={{
         display: 'flex',
         justifyContent: 'between',
@@ -105,7 +105,7 @@ export default function SentimentOscilloscope({ posts }) {
         </div>
       </div>
 
-      {/* Screen Visualization */}
+      {}
       <div style={{ 
         position: 'relative', 
         width: '100%', 
@@ -115,7 +115,7 @@ export default function SentimentOscilloscope({ posts }) {
         borderRadius: '2px',
         overflow: 'hidden'
       }}>
-        {/* Actual Sweep Line animation like radar */}
+        {}
         <div style={{
           position: 'absolute',
           top: 0,
@@ -142,15 +142,15 @@ export default function SentimentOscilloscope({ posts }) {
             </filter>
           </defs>
 
-          {/* Background grid */}
+          {}
           {gridLines}
 
           {points.length > 1 ? (
             <>
-              {/* Glowing Area under path */}
+              {}
               <path d={areaD} fill="url(#oscilloscope-glow-grad)" />
 
-              {/* Connected Line path */}
+              {}
               <path
                 d={pathD}
                 fill="none"
@@ -159,7 +159,7 @@ export default function SentimentOscilloscope({ posts }) {
                 style={{ filter: 'url(#line-glow)' }}
               />
 
-              {/* Data points vertices */}
+              {}
               {points.map((p, idx) => {
                 const isHovered = hoveredPoint?.postData?.external_id === p.postData.external_id;
                 const pointColor = p.confidence > 0.5 ? 'var(--neon-green)' : 'var(--neon-red)';
@@ -187,7 +187,7 @@ export default function SentimentOscilloscope({ posts }) {
           )}
         </svg>
 
-        {/* Hover Tooltip Overlay */}
+        {}
         {hoveredPoint && (
           <div style={{
             position: 'absolute',
@@ -227,7 +227,7 @@ export default function SentimentOscilloscope({ posts }) {
         )}
       </div>
 
-      {/* Footer helper */}
+      {}
       <div style={{
         display: 'flex',
         justifyContent: 'space-between',
@@ -239,7 +239,7 @@ export default function SentimentOscilloscope({ posts }) {
         <span>SENTIMENT DYNAMICS</span>
       </div>
 
-      {/* Inject custom CSS keyframes dynamically */}
+      {}
       <style>{`
         @keyframes radar-sweep {
           0% { transform: translateX(0); }

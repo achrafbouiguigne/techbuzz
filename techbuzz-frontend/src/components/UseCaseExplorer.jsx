@@ -95,7 +95,7 @@ export default function UseCaseExplorer({ selectedCountry, setSelectedCountry, s
 
   return (
     <div className="usecase-explorer-page">
-      {/* Left Column: Controls & Text Recommendations */}
+      {}
       <div className="explorer-left-col glass-panel">
         <h3 className="section-title">
           CAREER VECTOR CRITERIA
@@ -165,7 +165,7 @@ export default function UseCaseExplorer({ selectedCountry, setSelectedCountry, s
         ) : null}
       </div>
 
-      {/* Right Column: 3D Visualization Map & Skill Description */}
+      {}
       <div className="explorer-right-col glass-panel">
         <h3 className="section-title">
           DYNAMIC 3D ROADMAP CONSTELLATION

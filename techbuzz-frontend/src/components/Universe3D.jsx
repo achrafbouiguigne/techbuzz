@@ -1,18 +1,18 @@
 import React, { useMemo, useRef, useCallback } from 'react';
 import ForceGraph3D from 'react-force-graph-3d';
 
-// Cyberpunk color palette
+
 const CATEGORY_COLORS = {
-  "AI": "#00ff41", // Neon Green
-  "Frontend": "#00ffff", // Cyan
-  "Backend": "#ff003c", // Crimson Red
-  "DevOps": "#bc13fe", // Purple
-  "Database": "#ffaa00", // Orange
-  "Languages": "#ffff00", // Yellow
-  "Security": "#ff0000", // Red
-  "Mobile": "#0066ff", // Blue
-  "DataEng": "#00f0ff", // Bright Cyan
-  "Other": "#ffffff" // White
+  "AI": "#00ff41", 
+  "Frontend": "#00ffff", 
+  "Backend": "#ff003c", 
+  "DevOps": "#bc13fe", 
+  "Database": "#ffaa00", 
+  "Languages": "#ffff00", 
+  "Security": "#ff0000", 
+  "Mobile": "#0066ff", 
+  "DataEng": "#00f0ff", 
+  "Other": "#ffffff" 
 };
 
 export default function Universe3D({ posts, onNodeClick }) {
@@ -22,7 +22,7 @@ export default function Universe3D({ posts, onNodeClick }) {
     const nodes = [];
     const links = [];
 
-    // 1. Create a "Sector Hub" node for each active category
+    
     const activeCategories = new Set(posts.map(p => p.primary_category));
 
     activeCategories.forEach(cat => {
@@ -31,13 +31,13 @@ export default function Universe3D({ posts, onNodeClick }) {
         name: `${cat.toUpperCase()} HUB`,
         group: 'category',
         color: CATEGORY_COLORS[cat] || '#ffffff',
-        val: 25 // Make Sector Hubs massive
+        val: 25 
       });
     });
 
-    // 2. Create Data Packets (posts) orbiting the Hubs
+    
     posts.forEach(post => {
-      // Determine color based on sentiment (confidence > 0.5 is green, else red)
+      
       const isPositive = post.confidence > 0.5;
 
       nodes.push({
@@ -45,7 +45,7 @@ export default function Universe3D({ posts, onNodeClick }) {
         name: post.title,
         group: 'post',
         postData: post,
-        val: 3, // Data packets are small
+        val: 3, 
         color: isPositive ? '#00ff41' : '#ff003c'
       });
 
@@ -87,16 +87,16 @@ export default function Universe3D({ posts, onNodeClick }) {
       nodeColor="color"
       nodeVal="val"
       nodeRelSize={4}
-      nodeResolution={16} // Lower res for wireframe/hacker feel
-      linkColor={() => 'rgba(0, 255, 65, 0.15)'} // Faint neon green streams
+      nodeResolution={16} 
+      linkColor={() => 'rgba(0, 255, 65, 0.15)'} 
       linkWidth={0.5}
-      backgroundColor="#000000" // Pitch black
+      backgroundColor="#000000" 
       onNodeClick={handleNodeClick}
       d3Force="charge"
       d3AlphaDecay={0.02}
       d3VelocityDecay={0.2}
-    // Added bloom effect simulated via node rendering if needed, 
-    // but native colors will look great on #000000.
+    
+    
     />
   );
 }

@@ -1,6 +1,6 @@
-// ============================================================================
-// InptPulse v2 — Trend Worker
-// ============================================================================
+
+
+
 
 const { startConsumer } = require('../events/consumer');
 const { publishEvent } = require('../events/publisher');
@@ -19,8 +19,8 @@ const pgClient = new Client({
 pgClient.connect().catch(err => logger.error('Postgres connection error:', err));
 
 async function computeAndSaveSnapshot(dimType, dimId, weight) {
-  // Simplistic velocity/acceleration calculation for the PFA sprint 1 demo
-  // In a real scenario, this would aggregate over the window
+  
+  
   const velocity = weight * 1.5; 
   const acceleration = velocity * 0.2;
   const zScore = (velocity - 1.0) / 0.5;
@@ -58,15 +58,15 @@ async function computeAndSaveSnapshot(dimType, dimId, weight) {
 async function handlePostEnriched(event) {
   const post = JSON.parse(event.data);
   
-  // Pondération par category_scores
+  
   if (post.primary_category) {
     const weight = post.category_scores[post.primary_category] || 1.0;
     await computeAndSaveSnapshot('category', post.primary_category, weight);
   }
 
-  // Dimension Topic
+  
   if (post.topic_id !== null) {
-    await computeAndSaveSnapshot('topic', `topic_${post.topic_id}`, 1.0); // could weigh by topic_match_score
+    await computeAndSaveSnapshot('topic', `topic_${post.topic_id}`, 1.0); 
   }
 }
 
@@ -75,5 +75,5 @@ startConsumer(
   'trend-group',
   'trend-worker-1',
   handlePostEnriched,
-  true // Pattern A
+  true 
 ).catch(err => logger.error('Trend worker crashed:', err));
